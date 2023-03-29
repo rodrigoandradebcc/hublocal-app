@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import { AuthContext } from "../contexts/auth";
 import { CompanyEditOrCreateData } from "../interfaces/CompanyCreateData";
 import { CompanyData } from "../interfaces/CompanyData";
-import { CompanyFormData } from "../interfaces/CompanyFormData";
 import { postCreateCompany, updateCompany } from "../services/companies/companies-service";
 import { formatCNPJ } from "../utils/formatCNPJ";
 import { isCNPJValid } from "../utils/isCNPJValid";
@@ -15,11 +14,14 @@ import { cnpjRegex } from "../utils/regexCNPJ";
 interface CreateOrEditCompanyModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onOpenExcludeModal: () => void;
     editCompany?: CompanyData;
     getAllCompanies: () => void;
 }
 
-export function CreateOrEditCompanyModal({isOpen, onClose, editCompany, getAllCompanies}: CreateOrEditCompanyModalProps){
+export function CreateOrEditCompanyModal(
+  {isOpen, onClose, editCompany, getAllCompanies, onOpenExcludeModal}: CreateOrEditCompanyModalProps
+){
     const { register, handleSubmit, control, reset ,setError, formState: { errors } } = useForm<CompanyEditOrCreateData>({
       mode: "onChange",
       reValidateMode: "onChange",
@@ -50,8 +52,9 @@ export function CreateOrEditCompanyModal({isOpen, onClose, editCompany, getAllCo
           await postCreateCompany(user?.id!, data);
         } else {
           await updateCompany(editCompany?.id!, data);
-          getAllCompanies();
         }
+
+        getAllCompanies();
 
         toast.success('Empresa cadsatrada com sucessp')
       } catch (error) {
@@ -74,9 +77,7 @@ export function CreateOrEditCompanyModal({isOpen, onClose, editCompany, getAllCo
       validateCNPJ(formattedValue);
     }
 
-    function closeModal(){
-      console.log('sendo chamado');
-      
+    function closeModal(){      
       setClearFields();
       onClose();
     }

@@ -4,6 +4,7 @@ import { CompanyIcon } from "../../assets/icons/CompanyIcon";
 import { EditIcon } from "../../assets/icons/EditIcon";
 import { LocationIcon } from "../../assets/icons/LocationIcon";
 import { TrashIcon } from "../../assets/icons/TrashIcon";
+import { ConfirmationDeleteCompanyModal } from "../../components/ConfirmationDeleteCompanyModal";
 import { CreateOrEditCompanyModal } from "../../components/CreateOrEditCompanyModal";
 import { UserProfile } from "../../components/UserProfile";
 import { AuthContext } from "../../contexts/auth";
@@ -16,22 +17,37 @@ export const Companies = () => {
   const [editCompany, setEditCompany] = useState<CompanyData>();
 
   const { user } = useContext(AuthContext);
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenExcludeModal,
+    onOpen: onOpenExcludeModal,
+    onClose: onCloseExcludeModal
+  } = useDisclosure()
+
+
+  async function getAllCompanies(){
+    if(user?.id){
+      const response = await getAllCompaniesByUserId(user?.id);
+      setCompanies(response);
+    }
+  }
 
   useEffect(() => {
     (async () => {
-      if(user?.id){
-        const response = await getAllCompaniesByUserId(user?.id);
-        setCompanies(response);
-      }
+      await getAllCompanies();
     })();
   }, []);
 
   async function handleEditCompany(companyId: string) {
     const response = await getCompanyById(companyId);
     setEditCompany(response);
-    console.log(response);
     onOpen();
+  }
+
+  async function handleRemoveCompany(companyId: string) {
+    const response = await getCompanyById(companyId);
+    setEditCompany(response);
+    onOpenExcludeModal();
   }
 
 
@@ -102,6 +118,7 @@ export const Companies = () => {
                               icon={<TrashIcon />}
                               aria-label="Pesquisa"
                               color="primary.default"
+                              onClick={() => handleRemoveCompany(company.id)}
                             />
                           </Td>
                         </Tr>
@@ -123,7 +140,20 @@ export const Companies = () => {
           </Flex>
         }
       </Flex>
-      <CreateOrEditCompanyModal isOpen={isOpen} onClose={onClose} editCompany={editCompany}/>
+      <CreateOrEditCompanyModal
+        isOpen={isOpen}
+        onClose={onClose}
+        editCompany={editCompany}
+        getAllCompanies={getAllCompanies}
+        onOpenExcludeModal={onOpenExcludeModal}
+      />
+
+      <ConfirmationDeleteCompanyModal
+        isOpen={isOpenExcludeModal}
+        onClose={onCloseExcludeModal}
+        editCompany={editCompany}
+        getAllCompanies={getAllCompanies}
+      />
     </Flex>
   );
 }

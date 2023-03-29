@@ -4,6 +4,8 @@ import { CompanyResponseData } from "../../interfaces/CompanyResponseData";
 import api from "../api";
 
 async function postCreateCompany(userId: string, params: CompanyEditOrCreateData) {
+    console.log({userId, params});
+    
     const { data } = await api.post<CompanyResponseData>(`/companies`, {
         name: params.name,
         cnpj: params.cnpj,
@@ -23,6 +25,11 @@ async function getCompanyById(companyId: string) {
     return data;
 }
 
+async function deleteCompanyById(companyId: string) {
+    const { data } = await api.delete<CompanyData>(`/companies/${companyId}`);
+    return data;
+}
+
 async function updateCompany(companyId: string, params: CompanyEditOrCreateData) {
     const { data } = await api.patch<CompanyData>(`/companies/${companyId}`, {
         name: params.name,
@@ -36,5 +43,6 @@ export {
     postCreateCompany,
     getAllCompaniesByUserId,
     getCompanyById,
-    updateCompany
+    updateCompany,
+    deleteCompanyById
 };
