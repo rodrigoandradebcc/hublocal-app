@@ -50,15 +50,15 @@ export function CreateOrEditCompanyModal(
       try {
         if(editCompany === undefined){
           await postCreateCompany(user?.id!, data);
+          toast.success('Empresa cadastrada com sucesso');
         } else {
           await updateCompany(editCompany?.id!, data);
+          toast.success('Empresa atualizada com sucesso');
         }
-
         getAllCompanies();
-
-        toast.success('Empresa cadsatrada com sucessp')
       } catch (error) {
         console.log(error);
+        toast.error('Ops! Algo deu errado!');
       } finally {
         closeModal();
       }

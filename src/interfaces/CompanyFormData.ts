@@ -1,3 +1,3 @@
-import { CompanyCreateData } from "./CompanyCreateData";
+import { CompanyEditOrCreateData } from "./CompanyCreateData";
 
-export interface CompanyFormData extends CompanyCreateData {}
+export interface CompanyFormData extends CompanyEditOrCreateData {}

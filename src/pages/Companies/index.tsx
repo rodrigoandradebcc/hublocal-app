@@ -71,8 +71,7 @@ export const Companies = () => {
           <UserProfile name="Janiu" />
       </Flex>
 
-      <Flex>
-
+      <Flex w="full" h="full">
         {companies.length > 0 ? (
           <Box w="full" flexDirection="column" >
             
@@ -132,7 +131,14 @@ export const Companies = () => {
           </Box>
           </Box>
           ) :
-          <Flex h="100%" alignItems="center" justifyContent="center" textAlign="center" flexDirection="column">
+          <Flex
+            w="full"
+            minH="full"
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+            flexDirection="column"
+          >
             <Heading fontWeight="bold" fontSize="50px" w="600px">
               Nenhuma empresa cadastrada!
             </Heading>

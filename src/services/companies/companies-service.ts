@@ -4,8 +4,6 @@ import { CompanyResponseData } from "../../interfaces/CompanyResponseData";
 import api from "../api";
 
 async function postCreateCompany(userId: string, params: CompanyEditOrCreateData) {
-    console.log({userId, params});
-    
     const { data } = await api.post<CompanyResponseData>(`/companies`, {
         name: params.name,
         cnpj: params.cnpj,
