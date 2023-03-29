@@ -1,4 +1,5 @@
 import { Box, Flex, Heading, Image, Text, VStack } from "@chakra-ui/react";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useCallback, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
@@ -8,11 +9,15 @@ import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { AuthContext } from "../contexts/auth";
 import { LoginFormData } from "../interfaces/LoginFormData";
+import { loginSchema } from "../validations/loginSchema";
 
 export function LoginPage (): JSX.Element {
     const navigate = useNavigate();
-    const { register, handleSubmit } = useForm<LoginFormData>();
+    const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
+        resolver: yupResolver(loginSchema),
+    });
     const { signIn } = useContext(AuthContext);
+    
 
     function goToSignUp(): void {
         navigate('/sign-up');
@@ -21,7 +26,6 @@ export function LoginPage (): JSX.Element {
     const onSubmit = useCallback((formData: LoginFormData) => {
         signIn({ email: formData.email, password: formData.password });
     }, [signIn])
-
 
     return (
         <Flex h='calc(100vh)' width="full">
@@ -44,9 +48,15 @@ export function LoginPage (): JSX.Element {
                     <VStack as="form" alignItems="flex-start" onSubmit={handleSubmit(onSubmit)}>
                         <Text>Email</Text>
                         <Input {...register("email")} width="400px" padding="18px" title="Email" borderRadius="5px" mb="11px"/>
+                        {errors.email && (
+                            <Text color="red">{errors.email.message}</Text>
+                        )}
 
                         <Text>Senha</Text>
                         <Input {...register("password")} type="password" width="400px" padding="18px" borderRadius="5px" mb="24px" />
+                        {errors.password && (
+                            <Text color="red">{errors.password.message}</Text>
+                        )}
 
                         <Button
                             type="submit"

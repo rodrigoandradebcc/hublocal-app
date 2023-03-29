@@ -54,8 +54,7 @@ export const AuthProvider = ({ children }: AuthProps) => {
 
       goToCompanies();
     } catch (error) {
-      const err = error as AxiosError
-      toast.error(err.message);
+      toast.error('Ops! Algo deu errado!');
     }
   }
 
